@@ -16,14 +16,14 @@ db9231507572df5853352b021ae6eb23ba38275f4c72adc61531bf614423757906-6f2065f6-403a
 2. Go to Azure Portal (https://portal.azure.com)
 3. Create a new Static Web App resource
 4. Connect to your GitHub repository
-5. Add the deployment token as a GitHub secret named `AZURE_STATIC_WEB_APPS_API_TOKEN`
+5. Add the deployment token as a GitHub secret named `AZURE_STATIC_WEB_APPS_API_TOKEN_ZEALOUS_WATER_0E3165A10`
 6. Configure the build settings:
    - App location: `/`
    - Api location: Leave empty
    - Output location: Leave empty
 7. Complete the creation process
 
-The GitHub workflow will automatically deploy the game when changes are pushed to the main branch.
+The GitHub workflow will automatically deploy the game when changes are pushed to the master branch.
 
 ## Firebase Setup for Multiplayer
 
