@@ -20,6 +20,10 @@ class Player {
         this.territoriesHeldFor3Turns = 0;
         this.turnCounter = 0;
         
+        // Multiplayer properties
+        this.isRemote = false; // Whether this player is controlled by a remote user
+        this.remoteId = null;  // The Firebase ID of the remote player
+        
         // Track territories held for multiple turns
         this.territoriesHeldHistory = {}; // Maps territory name to number of turns held
     }

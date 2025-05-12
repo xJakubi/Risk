@@ -195,8 +195,7 @@ class RiskGame {
         // Show modal
         this.missionSelectModal.style.display = 'flex';
     }
-    
-    // Handle territory click
+      // Handle territory click
     handleTerritoryClick(territoryName) {
         if (!this.gameStarted) return;
         
@@ -204,8 +203,8 @@ class RiskGame {
         const player = this.currentPlayer;
         const territory = this.territories[territoryName];
         
-        // If it's an AI's turn, don't allow clicks
-        if (!player.isHuman) return;
+        // If it's not a controllable player's turn, don't allow clicks
+        if (!this.isCurrentPlayerControllable()) return;
         
         switch (this.currentPhase) {
             case CONFIG.phases.SETUP:
@@ -1015,5 +1014,11 @@ class RiskGame {
     // Helper function for delaying async operations
     delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    
+    // Check if the current player is controllable by the local user
+    isCurrentPlayerControllable() {
+        if (!this.currentPlayer) return false;
+        return this.currentPlayer.isHuman && !this.currentPlayer.isRemote;
     }
 }

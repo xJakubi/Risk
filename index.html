@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Risk - World Domination Board Game</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Risk - World Domination Board Game</title>    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/map.css">
     <link rel="stylesheet" href="css/dice.css">
+    <link rel="stylesheet" href="css/multiplayer.css">
 </head>
 <body>
     <div class="game-container">
@@ -64,8 +64,7 @@
                 <div id="mission-options"></div>
             </div>
         </div>
-        
-        <div id="dice-roll-modal" class="modal">
+          <div id="dice-roll-modal" class="modal">
             <div class="modal-content">
                 <h2>Roll Dice</h2>
                 <div id="roll-instructions"></div>
@@ -73,9 +72,54 @@
                 <button id="roll-dice-btn" class="control-btn">Roll Dice</button>
             </div>
         </div>
+        
+        <!-- Multiplayer Lobby Modal -->
+        <div id="lobby-modal" class="modal">
+            <div class="modal-content lobby-content">
+                <h2>Risk Online Multiplayer</h2>
+                
+                <div class="input-container">
+                    <label for="player-name-input">Your Name:</label>
+                    <input type="text" id="player-name-input" placeholder="Enter your name">
+                </div>
+                
+                <hr>
+                
+                <div class="lobby-section">
+                    <h3>Create a New Game</h3>
+                    <button id="create-game-btn" class="control-btn">Create Game</button>
+                </div>
+                
+                <hr>
+                
+                <div class="lobby-section">
+                    <h3>Join an Existing Game</h3>
+                    <div class="input-container">
+                        <label for="game-code-input">Game Code:</label>
+                        <input type="text" id="game-code-input" placeholder="Enter game code">
+                    </div>
+                    <button id="join-game-btn" class="control-btn">Join Game</button>
+                </div>
+                
+                <div id="waiting-room" class="lobby-section waiting-room" style="display: none;">
+                    <h3>Game Lobby</h3>
+                    <div class="game-code-container">
+                        <span>Game Code: </span>
+                        <span id="game-code-display" class="game-code"></span>
+                    </div>
+                    <h4>Players:</h4>
+                    <ul id="player-list" class="player-list"></ul>
+                    <button id="start-multiplayer-game-btn" class="control-btn" disabled>Start Game</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Connection Status Indicator -->
+        <div id="connection-status" class="connection-status" style="display: none;">
+            Not connected
+        </div>
     </div>
-    
-    <!-- Scripts -->
+      <!-- Scripts -->
     <script src="js/config.js"></script>
     <script src="js/map.js"></script>
     <script src="js/territories.js"></script>
@@ -83,6 +127,8 @@
     <script src="js/missions.js"></script>
     <script src="js/players.js"></script>
     <script src="js/game.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/multiplayer.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
