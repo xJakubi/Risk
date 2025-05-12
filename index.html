@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk - World Domination Board Game</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/map.css">
+    <link rel="stylesheet" href="css/dice.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>Risk</h1>
+            <div id="game-status">Welcome to Risk! Start a new game.</div>
+        </header>
+        
+        <main>
+            <div class="game-board">
+                <div id="map-container">
+                    <!-- Map will be loaded here dynamically -->
+                </div>
+            </div>
+            
+            <div class="game-sidebar">
+                <div class="player-info">
+                    <h2>Current Player</h2>
+                    <div id="current-player"></div>
+                    <div id="player-armies"></div>
+                </div>
+                
+                <div class="game-phase">
+                    <h2>Game Phase</h2>
+                    <div id="phase-display">Setup</div>
+                </div>
+                
+                <div class="dice-container">
+                    <h2>Dice</h2>
+                    <div id="attack-dice-container" class="dice-area">
+                        <h3>Attack</h3>
+                        <div id="attack-dice"></div>
+                    </div>
+                    <div id="defense-dice-container" class="dice-area">
+                        <h3>Defense</h3>
+                        <div id="defense-dice"></div>
+                    </div>
+                </div>
+                
+                <div class="missions">
+                    <h2>Your Mission</h2>
+                    <div id="player-mission"></div>
+                </div>
+                
+                <div class="game-controls">
+                    <button id="new-game-btn" class="control-btn">New Game</button>
+                    <button id="end-turn-btn" class="control-btn" disabled>End Turn</button>
+                </div>
+            </div>
+        </main>
+        
+        <div id="mission-select-modal" class="modal">
+            <div class="modal-content">
+                <h2>Choose Your Mission</h2>
+                <div id="mission-options"></div>
+            </div>
+        </div>
+        
+        <div id="dice-roll-modal" class="modal">
+            <div class="modal-content">
+                <h2>Roll Dice</h2>
+                <div id="roll-instructions"></div>
+                <div id="roll-dice-display"></div>
+                <button id="roll-dice-btn" class="control-btn">Roll Dice</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/territories.js"></script>
+    <script src="js/dice.js"></script>
+    <script src="js/missions.js"></script>
+    <script src="js/players.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

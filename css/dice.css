@@ -1,0 +1,227 @@
+/* Dice styling for Risk game */
+.dice {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    margin: 5px;
+    display: inline-block;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    perspective: 800px;
+    transform-style: preserve-3d;
+}
+
+/* Attack dice (red) */
+.attack-die {
+    background-color: #e74c3c;
+}
+
+/* Defense dice (blue) */
+.defense-die {
+    background-color: #3498db;
+}
+
+/* 3D Dice cube */
+.dice-cube {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease-out;
+}
+
+.dice-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: inherit;
+}
+
+/* Dice pips (dots) container */
+.dice-pips {
+    display: grid;
+    width: 70%;
+    height: 70%;
+    gap: 2px;
+}
+
+/* Individual dice pips */
+.pip {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: white;
+}
+
+/* Position of dice faces in 3D space */
+.face-1 {
+    transform: translateZ(20px);
+}
+
+.face-2 {
+    transform: rotateY(90deg) translateZ(20px);
+}
+
+.face-3 {
+    transform: rotateY(180deg) translateZ(20px);
+}
+
+.face-4 {
+    transform: rotateY(-90deg) translateZ(20px);
+}
+
+.face-5 {
+    transform: rotateX(90deg) translateZ(20px);
+}
+
+.face-6 {
+    transform: rotateX(-90deg) translateZ(20px);
+}
+
+/* Pip layouts for each face */
+.pips-1 {
+    display: grid;
+    place-items: center;
+}
+
+.pips-2 {
+    display: grid;
+    grid-template-areas: 
+        "a ."
+        ". b";
+}
+
+.pips-2 .pip:nth-child(1) { grid-area: a; }
+.pips-2 .pip:nth-child(2) { grid-area: b; }
+
+.pips-3 {
+    display: grid;
+    grid-template-areas: 
+        "a . ."
+        ". b ."
+        ". . c";
+}
+
+.pips-3 .pip:nth-child(1) { grid-area: a; }
+.pips-3 .pip:nth-child(2) { grid-area: b; }
+.pips-3 .pip:nth-child(3) { grid-area: c; }
+
+.pips-4 {
+    display: grid;
+    grid-template-areas: 
+        "a . b"
+        ". . ."
+        "c . d";
+}
+
+.pips-4 .pip:nth-child(1) { grid-area: a; }
+.pips-4 .pip:nth-child(2) { grid-area: b; }
+.pips-4 .pip:nth-child(3) { grid-area: c; }
+.pips-4 .pip:nth-child(4) { grid-area: d; }
+
+.pips-5 {
+    display: grid;
+    grid-template-areas: 
+        "a . b"
+        ". c ."
+        "d . e";
+}
+
+.pips-5 .pip:nth-child(1) { grid-area: a; }
+.pips-5 .pip:nth-child(2) { grid-area: b; }
+.pips-5 .pip:nth-child(3) { grid-area: c; }
+.pips-5 .pip:nth-child(4) { grid-area: d; }
+.pips-5 .pip:nth-child(5) { grid-area: e; }
+
+.pips-6 {
+    display: grid;
+    grid-template-areas: 
+        "a . b"
+        "c . d"
+        "e . f";
+}
+
+.pips-6 .pip:nth-child(1) { grid-area: a; }
+.pips-6 .pip:nth-child(2) { grid-area: b; }
+.pips-6 .pip:nth-child(3) { grid-area: c; }
+.pips-6 .pip:nth-child(4) { grid-area: d; }
+.pips-6 .pip:nth-child(5) { grid-area: e; }
+.pips-6 .pip:nth-child(6) { grid-area: f; }
+
+/* Rolling animation */
+@keyframes rolling {
+    0% { transform: rotateX(0) rotateY(0) rotateZ(0); }
+    25% { transform: rotateX(180deg) rotateY(90deg) rotateZ(45deg); }
+    50% { transform: rotateX(360deg) rotateY(180deg) rotateZ(90deg); }
+    75% { transform: rotateX(540deg) rotateY(270deg) rotateZ(135deg); }
+    100% { transform: rotateX(720deg) rotateY(360deg) rotateZ(180deg); }
+}
+
+.dice-cube.rolling {
+    animation: rolling 1s;
+}
+
+/* Dice results display */
+.dice-results {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.dice-result {
+    font-weight: bold;
+    font-size: 18px;
+    padding: 5px 10px;
+    border-radius: 3px;
+}
+
+.attack-result {
+    background-color: rgba(231, 76, 60, 0.2);
+    color: #c0392b;
+}
+
+.defense-result {
+    background-color: rgba(52, 152, 219, 0.2);
+    color: #2980b9;
+}
+
+/* Dice roll button */
+#roll-dice-btn {
+    display: block;
+    margin: 20px auto 0;
+    padding: 10px 20px;
+    font-size: 18px;
+}
+
+/* Dice area layout */
+.dice-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Roll animation with bouncing effect */
+.dice.rolling-bounce {
+    animation: bouncing 0.5s ease-in-out 3;
+}
+
+@keyframes bouncing {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px) rotate(10deg); }
+}
+
+/* Winner/loser indicators */
+.dice.winner {
+    box-shadow: 0 0 10px rgba(46, 204, 113, 0.8);
+}
+
+.dice.loser {
+    opacity: 0.6;
+}

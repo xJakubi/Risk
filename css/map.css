@@ -1,0 +1,141 @@
+/* Map styling for Risk game */
+.territory {
+    fill: #95a5a6;
+    stroke: #2c3e50;
+    stroke-width: 1;
+    transition: fill 0.3s;
+    cursor: pointer;
+}
+
+.territory:hover {
+    fill: #bdc3c7;
+}
+
+.territory.selected {
+    stroke-width: 2;
+    stroke: #f1c40f;
+}
+
+/* Player color territories */
+.territory.player-1 {
+    fill: #e74c3c;
+}
+
+.territory.player-2 {
+    fill: #3498db;
+}
+
+.territory.player-3 {
+    fill: #2ecc71;
+}
+
+.territory.player-4 {
+    fill: #f39c12;
+}
+
+.territory.player-5 {
+    fill: #9b59b6;
+}
+
+.territory.player-6 {
+    fill: #1abc9c;
+}
+
+/* Army count labels */
+.army-count {
+    fill: white;
+    font-weight: bold;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    font-size: 12px;
+    pointer-events: none;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Continent labels */
+.continent-label {
+    font-size: 14px;
+    font-weight: bold;
+    fill: #2c3e50;
+    text-anchor: middle;
+}
+
+/* Connections between territories */
+.connection {
+    stroke: #7f8c8d;
+    stroke-width: 1;
+    stroke-dasharray: 3,3;
+    fill: none;
+}
+
+/* Territory highlighting for actions */
+.territory.attackable {
+    stroke: #e74c3c;
+    stroke-width: 2;
+    animation: pulse 1.5s infinite;
+}
+
+.territory.fortifiable {
+    stroke: #3498db;
+    stroke-width: 2;
+    animation: pulse 1.5s infinite;
+}
+
+.territory.reinforceable {
+    stroke: #2ecc71;
+    stroke-width: 2;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        stroke-opacity: 0.6;
+    }
+    50% {
+        stroke-opacity: 1;
+    }
+    100% {
+        stroke-opacity: 0.6;
+    }
+}
+
+/* Map controls */
+.map-controls {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    gap: 5px;
+}
+
+.map-control-btn {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-size: 18px;
+}
+
+.map-control-btn:hover {
+    background-color: #f1f1f1;
+}
+
+/* Tooltip for territories */
+.territory-tooltip {
+    position: absolute;
+    background-color: rgba(44, 62, 80, 0.9);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.3s;
+}
