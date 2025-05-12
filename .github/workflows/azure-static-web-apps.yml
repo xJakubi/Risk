@@ -27,6 +27,7 @@ jobs:
           app_location: "/" # App source code path
           output_location: "" # Built app content directory - not needed for HTML/CSS/JS
           skip_app_build: true
+          deployment_action: "upload" # Adding this parameter to fix the deployment issue
           
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
