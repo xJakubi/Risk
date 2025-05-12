@@ -18,36 +18,54 @@ class GameMap {
         this.onTerritoryClick = null;
         this.onTerritoryHover = null;
     }
-    
-    // Initialize the map
+      // Initialize the map
     initialize() {
-        // Create SVG element
-        this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        this.svg.setAttribute('width', '100%');
-        this.svg.setAttribute('height', '100%');
-        this.svg.setAttribute('viewBox', `${this.viewBox.x} ${this.viewBox.y} ${this.viewBox.width} ${this.viewBox.height}`);
-        this.svg.style.backgroundColor = '#b3d9ff'; // Ocean color
-        
-        // Create groups for different map elements
-        this.createGroups();
-        
-        // Add territories
-        this.createTerritories();
-        
-        // Add continent labels
-        this.addContinentLabels();
-        
-        // Add connections between territories
-        this.createConnections();
-        
-        // Add map controls
-        this.addMapControls();
-        
-        // Create tooltip
-        this.createTooltip();
-        
-        // Add map to container
-        this.container.appendChild(this.svg);
+        // Load the SVG map file
+        this.loadMapSVG();
+    }
+    
+    // Load the SVG map file
+    loadMapSVG() {
+        fetch('assets/images/risk-map.svg')
+            .then(response => response.text())
+            .then(svgData => {
+                // Insert the SVG into the container
+                this.container.innerHTML = svgData;
+                
+                // Get the SVG element
+                this.svg = this.container.querySelector('svg');
+                this.svg.setAttribute('width', '100%');
+                this.svg.setAttribute('height', '100%');
+                
+                // Set the initial viewBox
+                this.svg.setAttribute('viewBox', `${this.viewBox.x} ${this.viewBox.y} ${this.viewBox.width} ${this.viewBox.height}`);
+                
+                // Get references to groups
+                this.connectionsGroup = this.svg.querySelector('#connections');
+                this.territoriesGroup = this.svg.querySelector('#territories');
+                this.armyCountsGroup = this.svg.querySelector('#army-counts');
+                this.labelsGroup = this.svg.querySelector('#labels');
+                
+                // Create territories
+                this.createTerritories();
+                
+                // Create connections between territories
+                this.createConnections();
+                
+                // Set up map controls
+                this.setupMapControls();
+                
+                // Create tooltip
+                this.createTooltip();
+                
+                // Set up drag and zoom
+                this.setupDragAndZoom();
+            })
+            .catch(error => {
+                console.error('Error loading the map SVG:', error);
+                // Fallback to the old map creation if SVG fails to load
+                this.createFallbackMap();
+            });
         
         // Set up event listeners
         this.setupEventListeners();
@@ -82,37 +100,130 @@ class GameMap {
             this.createTerritory(name, data);
         }
     }
-    
     // Create a single territory
     createTerritory(name, data) {
-        // Create a circle for each territory
-        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('cx', data.x);
-        circle.setAttribute('cy', data.y);
-        circle.setAttribute('r', 10);
-        circle.setAttribute('id', `territory-${name.replace(/\s+/g, '-').toLowerCase()}`);
-        circle.setAttribute('class', 'territory');
-        circle.setAttribute('data-name', name);
-        circle.setAttribute('data-continent', data.continent);
+        // Create a territory group
+        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        group.setAttribute('id', `territory-group-${name.replace(/\s+/g, '-').toLowerCase()}`);
+        group.setAttribute('data-name', name);
+        group.setAttribute('data-continent', data.continent);
         
-        // Store territory element
+        // Create a more detailed territory shape
+        // We'll generate a polygon based on the territory position
+        const territory = this.createTerritoryShape(name, data);
+        territory.setAttribute('id', `territory-${name.replace(/\s+/g, '-').toLowerCase()}`);
+        territory.setAttribute('class', 'territory');
+        territory.setAttribute('data-name', name);
+        territory.setAttribute('data-continent', data.continent);
+        
+        // Add a highlight/glow effect for the territory
+        const highlight = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        highlight.setAttribute('cx', data.x);
+        highlight.setAttribute('cy', data.y);
+        highlight.setAttribute('r', 6);
+        highlight.setAttribute('fill', 'rgba(255, 255, 255, 0.5)');
+        highlight.setAttribute('class', 'territory-highlight');
+          // Add event listeners
+        territory.addEventListener('click', () => {
+            if (this.onTerritoryClick) {
+                this.onTerritoryClick(name);
+            }
+        });
+        
+        territory.addEventListener('mouseenter', () => {
+            // Show tooltip
+            this.showTooltip(name, data, { x: data.x, y: data.y });
+            
+            if (this.onTerritoryHover) {
+                this.onTerritoryHover(name, true);
+            }
+        });
+        
+        territory.addEventListener('mouseleave', () => {
+            // Hide tooltip
+            this.hideTooltip();
+            
+            if (this.onTerritoryHover) {
+                this.onTerritoryHover(name, false);
+            }
+        });
+        
+        // Add shapes to the group
+        group.appendChild(territory);
+        group.appendChild(highlight);
+        
+        // Store territory elements
         this.territories[name] = {
-            element: circle,
+            element: territory,
+            group: group,
+            highlight: highlight,
             data: data
         };
         
         // Add to territories group
-        this.territoriesGroup.appendChild(circle);
+        this.territoriesGroup.appendChild(group);
         
         // Create army count label
         const armyCount = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         armyCount.setAttribute('x', data.x);
-        armyCount.setAttribute('y', data.y);
+        armyCount.setAttribute('y', data.y + 1); // Slight offset for better centering
         armyCount.setAttribute('class', 'army-count');
         armyCount.setAttribute('id', `army-count-${name.replace(/\s+/g, '-').toLowerCase()}`);
         armyCount.textContent = '0';
         
         this.armyCountsGroup.appendChild(armyCount);
+    }
+    
+    // Create a polygon shape for a territory
+    createTerritoryShape(name, data) {
+        // Generate a polygon shape around the territory center point
+        // This creates an irregular polygon to make maps more interesting
+        const points = this.generateTerritoryPoints(data.x, data.y, data.continent);
+        
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', points);
+        
+        // Add the continent class to style based on continent
+        path.classList.add(`continent-${data.continent.toLowerCase().replace(/\s+/g, '-')}`);
+        
+        return path;
+    }
+    
+    // Generate points for a territory polygon
+    generateTerritoryPoints(x, y, continent) {
+        // Size of territory based on continent (some continents have more dense territories)
+        const baseSizeMap = {
+            'North America': 15,
+            'South America': 18,
+            'Europe': 12,
+            'Africa': 16,
+            'Asia': 14,
+            'Australia': 20,
+            'Central America': 10,
+            'Middle East': 14,
+            'Northern Europe': 10,
+            'Southern Europe': 10
+        };
+        
+        const baseSize = baseSizeMap[continent] || 15;
+        
+        // Create an irregular polygon with 6-8 points
+        const points = [];
+        const numPoints = 6 + Math.floor(Math.random() * 3); // 6-8 points
+        
+        for (let i = 0; i < numPoints; i++) {
+            const angle = (i / numPoints) * 2 * Math.PI;
+            // Vary the radius to create irregular shapes
+            const radius = baseSize * (0.8 + Math.random() * 0.4);
+            const px = x + radius * Math.cos(angle);
+            const py = y + radius * Math.sin(angle);
+            points.push(`${i === 0 ? 'M' : 'L'}${px},${py}`);
+        }
+        
+        // Close the path
+        points.push('Z');
+        
+        return points.join(' ');
     }
     
     // Add continent labels to the map
@@ -215,55 +326,38 @@ class GameMap {
         this.container.appendChild(this.tooltip);
     }
     
-    // Set up event listeners for map interaction
-    setupEventListeners() {
-        // Territory click events
-        for (const territory of Object.values(this.territories)) {
-            territory.element.addEventListener('click', (e) => {
-                const territoryName = e.target.getAttribute('data-name');
-                if (this.onTerritoryClick) {
-                    this.onTerritoryClick(territoryName);
-                }
-            });
-            
-            // Hover events
-            territory.element.addEventListener('mouseenter', (e) => {
-                const territoryName = e.target.getAttribute('data-name');
-                const territoryContinent = e.target.getAttribute('data-continent');
-                
-                // Show tooltip
-                this.tooltip.textContent = `${territoryName} (${territoryContinent})`;
-                this.tooltip.style.display = 'block';
-                
-                // Callback
-                if (this.onTerritoryHover) {
-                    this.onTerritoryHover(territoryName, true);
-                }
-            });
-            
-            territory.element.addEventListener('mouseleave', (e) => {
-                const territoryName = e.target.getAttribute('data-name');
-                
-                // Hide tooltip
-                this.tooltip.style.display = 'none';
-                
-                // Callback
-                if (this.onTerritoryHover) {
-                    this.onTerritoryHover(territoryName, false);
-                }
-            });
-            
-            territory.element.addEventListener('mousemove', (e) => {
-                // Position tooltip near cursor
-                const rect = this.container.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                
-                this.tooltip.style.left = `${x + 10}px`;
-                this.tooltip.style.top = `${y + 10}px`;
-            });
-        }
+    // Show tooltip for a territory
+    showTooltip(name, data, position) {
+        if (!this.tooltip) return;
         
+        // Update tooltip content with territory info
+        this.tooltip.innerHTML = `
+            <strong>${name}</strong>
+            <div>Continent: ${data.continent}</div>
+        `;
+        
+        // Calculate position (above the territory)
+        const svgRect = this.svg.getBoundingClientRect();
+        const scale = svgRect.width / this.viewBox.width;
+        
+        // Convert SVG coordinates to screen coordinates
+        const screenX = (position.x - this.viewBox.x) * scale;
+        const screenY = (position.y - this.viewBox.y) * scale;
+        
+        // Position tooltip
+        this.tooltip.style.left = `${screenX}px`;
+        this.tooltip.style.top = `${screenY - 40}px`; // Position above territory
+        this.tooltip.style.display = 'block';
+    }
+    
+    // Hide tooltip
+    hideTooltip() {
+        if (this.tooltip) {
+            this.tooltip.style.display = 'none';
+        }
+    }
+      // Set up event listeners for map interaction
+    setupEventListeners() {
         // Pan events
         this.svg.addEventListener('mousedown', (e) => {
             if (e.button === 0) { // Left mouse button

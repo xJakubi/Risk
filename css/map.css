@@ -1,47 +1,133 @@
 /* Map styling for Risk game */
+/* Modern styling with animations and effects */
 .territory {
-    fill: #95a5a6;
-    stroke: #2c3e50;
-    stroke-width: 1;
-    transition: fill 0.3s;
+    fill: rgba(255, 255, 255, 0.7);
+    stroke: rgba(44, 62, 80, 0.8);
+    stroke-width: 1.5;
+    transition: all 0.3s ease;
     cursor: pointer;
+    filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.2));
+    animation: territory-enter 0.5s ease-out;
 }
 
 .territory:hover {
-    fill: #bdc3c7;
+    fill: rgba(255, 255, 255, 0.9);
+    transform: scale(1.05);
+    z-index: 100;
+    filter: drop-shadow(1px 3px 3px rgba(0, 0, 0, 0.3));
 }
 
 .territory.selected {
-    stroke-width: 2;
+    stroke-width: 2.5;
     stroke: #f1c40f;
+    filter: url(#glow);
 }
 
-/* Player color territories */
+/* Continent styling */
+.continent {
+    stroke: #2c3e50;
+    stroke-width: 1.5;
+    transition: all 0.3s ease;
+    opacity: 0.85;
+}
+
+.continent:hover {
+    opacity: 0.95;
+    stroke-width: 2;
+}
+
+/* Map background and container styling */
+#map-container {
+    background: linear-gradient(135deg, #141e30, #243b55);
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+    position: relative;
+}
+
+/* Player color territories - with gradients */
 .territory.player-1 {
     fill: #e74c3c;
+    filter: drop-shadow(0 0 3px rgba(231, 76, 60, 0.5));
 }
 
 .territory.player-2 {
     fill: #3498db;
+    filter: drop-shadow(0 0 3px rgba(52, 152, 219, 0.5));
 }
 
 .territory.player-3 {
     fill: #2ecc71;
+    filter: drop-shadow(0 0 3px rgba(46, 204, 113, 0.5));
 }
 
 .territory.player-4 {
     fill: #f39c12;
+    filter: drop-shadow(0 0 3px rgba(243, 156, 18, 0.5));
 }
 
 .territory.player-5 {
     fill: #9b59b6;
+    filter: drop-shadow(0 0 3px rgba(155, 89, 182, 0.5));
 }
 
 .territory.player-6 {
     fill: #1abc9c;
+    filter: drop-shadow(0 0 3px rgba(26, 188, 156, 0.5));
 }
 
-/* Army count labels */
+/* Territory styling per continent */
+.territory.continent-north-america {
+    fill: url(#northAmericaGradient);
+    stroke: rgba(165, 78, 53, 0.9);
+}
+
+.territory.continent-south-america {
+    fill: url(#southAmericaGradient);
+    stroke: rgba(107, 142, 35, 0.9);
+}
+
+.territory.continent-europe {
+    fill: url(#europeGradient);
+    stroke: rgba(54, 95, 165, 0.9);
+}
+
+.territory.continent-africa {
+    fill: url(#africaGradient);
+    stroke: rgba(186, 140, 0, 0.9);
+}
+
+.territory.continent-asia {
+    fill: url(#asiaGradient);
+    stroke: rgba(123, 44, 191, 0.9);
+}
+
+.territory.continent-australia {
+    fill: url(#australiaGradient);
+    stroke: rgba(16, 135, 110, 0.9);
+}
+
+.territory.continent-central-america {
+    fill: url(#centralAmericaGradient);
+    stroke: rgba(142, 68, 173, 0.9);
+}
+
+.territory.continent-middle-east {
+    fill: url(#middleEastGradient);
+    stroke: rgba(196, 89, 17, 0.9);
+}
+
+.territory.continent-northern-europe {
+    fill: url(#northernEuropeGradient);
+    stroke: rgba(36, 113, 163, 0.9);
+}
+
+.territory.continent-southern-europe {
+    fill: url(#southernEuropeGradient);
+    stroke: rgba(30, 96, 145, 0.9);
+}
+
+/* Army count labels - modern styling */
 .army-count {
     fill: white;
     font-weight: bold;
@@ -49,23 +135,42 @@
     dominant-baseline: middle;
     font-size: 12px;
     pointer-events: none;
+    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.8);
+    font-family: 'Arial', sans-serif;
     text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Enhanced connection lines between territories */
+.connection {
+    stroke: rgba(255, 255, 255, 0.5);
+    stroke-width: 1.5;
+    stroke-dasharray: 3,2;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.connection.active {
+    stroke: rgba(255, 255, 255, 0.8);
+    stroke-width: 2;
+    stroke-dasharray: none;
+    animation: pulse-connection 1.5s infinite;
+}
+
+@keyframes pulse-connection {
+    0% { stroke-opacity: 0.6; }
+    50% { stroke-opacity: 1; }
+    100% { stroke-opacity: 0.6; }
 }
 
 /* Continent labels */
 .continent-label {
-    font-size: 14px;
+    font-family: 'Arial', sans-serif;
     font-weight: bold;
-    fill: #2c3e50;
+    fill: rgba(255, 255, 255, 0.8);
     text-anchor: middle;
-}
-
-/* Connections between territories */
-.connection {
-    stroke: #7f8c8d;
-    stroke-width: 1;
-    stroke-dasharray: 3,3;
-    fill: none;
+    font-size: 14px;
+    pointer-events: none;
+    text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.5);
 }
 
 /* Territory highlighting for actions */
@@ -126,6 +231,28 @@
     background-color: #f1f1f1;
 }
 
+.control-button {
+    fill: rgba(52, 73, 94, 0.8);
+    stroke: white;
+    stroke-width: 1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.control-button:hover {
+    fill: #2c3e50;
+    transform: scale(1.1);
+}
+
+.control-label {
+    fill: white;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+    text-anchor: middle;
+    pointer-events: none;
+}
+
 /* Tooltip for territories */
 .territory-tooltip {
     position: absolute;
@@ -138,4 +265,110 @@
     z-index: 10;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     transition: opacity 0.3s;
+}
+
+.map-tooltip {
+    position: absolute;
+    background: rgba(44, 62, 80, 0.95);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    transform: translate(-50%, -100%);
+    margin-top: -10px;
+    opacity: 0;
+}
+
+.map-tooltip:after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    margin-left: -5px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid rgba(44, 62, 80, 0.95);
+}
+
+.map-tooltip.visible {
+    opacity: 1;
+}
+
+/* Animation for territory capture */
+@keyframes capture-pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.territory.capturing {
+    animation: capture-pulse 0.5s ease-in-out;
+}
+
+/* Territory entrance animation */
+@keyframes territory-enter {
+    0% { 
+        transform: scale(0.8); 
+        opacity: 0;
+    }
+    100% { 
+        transform: scale(1); 
+        opacity: 1;
+    }
+}
+
+/* Territory attack animation */
+@keyframes territory-attack {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+.territory.attacking {
+    animation: territory-attack 0.4s ease-in-out;
+}
+
+/* Territory defense animation */
+@keyframes territory-defense {
+    0% { filter: brightness(1); }
+    50% { filter: brightness(1.5); }
+    100% { filter: brightness(1); }
+}
+
+.territory.defending {
+    animation: territory-defense 0.4s ease-in-out;
+}
+
+/* Territory border animation when active */
+@keyframes territory-border-pulse {
+    0% { stroke-width: 1.5; }
+    50% { stroke-width: 2.5; }
+    100% { stroke-width: 1.5; }
+}
+
+.territory.active {
+    animation: territory-border-pulse 1.5s infinite;
+}
+
+/* Map SVG container */
+svg {
+    border-radius: 10px;
+    transition: all 0.5s ease;
+}
+
+/* Responsive design for map */
+@media (max-width: 768px) {
+    .continent-label {
+        font-size: 10px;
+    }
+    
+    .army-count {
+        font-size: 10px;
+    }
 }
